@@ -55,32 +55,33 @@
   .bubble .text{font-size:clamp(15px,1.45vw,20px);line-height:1.6;letter-spacing:-.02em;white-space:pre-line}
   .bubble.thought{background:rgba(20,22,29,.9);color:#f8f5f1;border-color:rgba(255,255,255,.08)}
   .bubble.thought .who{color:#e8d8cf}.bubble.thought.me .who{color:#d6e0f8}
-  /* 3D actor anchored speech: female on left, male on right; JS computes screen positions. */
-  #bubbleArea{inset:0;padding:0;z-index:4}
+  /* Speech anchored to each real 3D character's head, not to screen columns. */
+  #bubbleArea{inset:0;padding:0;z-index:4;pointer-events:none}
   #bubbleTethers{position:absolute;inset:0;width:100%;height:100%;overflow:visible;pointer-events:none;z-index:0}
-  .bubble{z-index:1;left:0;right:auto;top:0;bottom:auto;max-width:none;min-width:0;width:280px;
-    padding:14px 17px;border-radius:22px;overflow-wrap:anywhere;
-    filter:drop-shadow(0 7px 15px rgba(15,17,24,.13));
-    transition:opacity .48s ease,transform .48s cubic-bezier(.2,.8,.2,1),box-shadow .4s ease;
+  #bubbleArea .bubble{
+    z-index:1;left:0;right:auto;top:0;bottom:auto;width:270px;min-width:0;max-width:none;
+    padding:17px 20px 18px;border-radius:24px;overflow-wrap:anywhere;
+    box-shadow:0 16px 38px rgba(11,13,19,.22);
+    transition:opacity .55s ease, transform .55s cubic-bezier(.18,.8,.2,1), box-shadow .45s ease;
+    transform:translateY(15px) scale(.94);
   }
-  .bubble.meOut,.bubble.meIn{border-left:4px solid #a9bde5}
-  .bubble.otherOut,.bubble.otherIn{border-right:4px solid #dfafbf}
-  .bubble.thought{border-radius:25px}
-  .bubble.thought .who::before{border-radius:50%}
-  .bubble .text{font-size:clamp(14px,1.25vw,18px);line-height:1.5}
-  .bubble .who{font-size:11px;letter-spacing:.05em;margin-bottom:5px}
-  .bubble.thought{background:rgba(26,29,39,.92)}
-  .bubble.show{box-shadow:0 18px 45px rgba(0,0,0,.18)}
-  #bubbleArea .bubble.speaker{transform-origin:50% 90%}
-  .bubble.otherOut,.bubble.otherIn,.bubble.meOut,.bubble.meIn{left:0;right:auto;top:0;bottom:auto}
-  /* The lines, rather than decorative corners, point precisely to the speaker's 3D face. */
-  #bubbleTethers path{fill:none;stroke-width:2.3;stroke-linecap:round;stroke-linejoin:round;opacity:0;transition:opacity .4s}
-  #bubbleTethers path.is-shown{opacity:.95}
-  #bubbleTethers .speech-line{stroke:#f5f2ef;filter:drop-shadow(0 2px 3px rgba(0,0,0,.28))}
-  #bubbleTethers .thought-line{stroke:#e8d9e2;stroke-dasharray:4 8;stroke-width:1.8;opacity:0}
-  #bubbleTethers .thought-line.is-shown{opacity:.78}
-  #bubbleTethers .endpoint{fill:#fffaf2;opacity:0;transition:opacity .3s}
-  #bubbleTethers .endpoint.is-shown{opacity:.85}
+  #bubbleArea .bubble.show{opacity:1;transform:translateY(0) scale(1);box-shadow:0 22px 52px rgba(10,12,20,.24)}
+  #bubbleArea .bubble.meOut,#bubbleArea .bubble.meIn{border-left:4px solid #a5bce7}
+  #bubbleArea .bubble.otherOut,#bubbleArea .bubble.otherIn{border-right:4px solid #e1aaba}
+  #bubbleArea .bubble.thought{border-radius:29px;background:rgba(23,26,35,.94);border:1px solid rgba(255,255,255,.24)}
+  #bubbleArea .bubble.thought.meIn{border-left:4px solid #a5bce7}
+  #bubbleArea .bubble.thought.otherIn{border-right:4px solid #e1aaba}
+  #bubbleArea .bubble .text{font-size:clamp(15px,1.2vw,19px);line-height:1.55}
+  #bubbleArea .bubble .who{font-size:11px;letter-spacing:.05em;margin-bottom:7px}
+  #bubbleTethers path{fill:none;stroke-width:3;stroke-linecap:round;stroke-linejoin:round;opacity:0;transition:opacity .4s}
+  #bubbleTethers path.is-shown{opacity:1}
+  #bubbleTethers .speech-line{stroke:#fffaf6;filter:drop-shadow(0 2px 4px rgba(0,0,0,.24))}
+  #bubbleTethers .thought-line{stroke:#f4e2ec;stroke-dasharray:3 7;stroke-width:2.4}
+  #bubbleTethers .thought-line.is-shown{opacity:.85}
+  #bubbleTethers .endpoint{fill:#fffaf6;opacity:0;transition:opacity .4s}
+  #bubbleTethers .endpoint.is-shown{opacity:.9}
+  #bubbleArea .bubble.spoken-now{animation:voice-bump .7s ease-out 1}
+  @keyframes voice-bump{0%{filter:brightness(1.12)}100%{filter:brightness(1)}}
 
   .choice-wrap{position:absolute;left:0;right:0;bottom:max(18px,env(safe-area-inset-bottom));display:flex;flex-direction:column;align-items:center;gap:12px;padding:0 16px 10px;pointer-events:none}
   .choice-deck{display:flex;flex-wrap:wrap;justify-content:center;gap:12px;max-width:min(96vw,1120px);pointer-events:auto}
@@ -160,10 +161,10 @@
   @media (max-width:680px){
     .scene-hint{top:112px;font-size:12px;padding:9px 13px}
     #bubbleArea{padding:0}
-    .bubble{width:min(82vw,360px)!important;max-width:min(82vw,360px);padding:12px 14px;border-radius:18px}
-    /* Narrow screens show the latest speaker, positioned from the actor's head where possible. */
-    .bubble:not(.active-mobile){opacity:0!important;pointer-events:none!important}
-    .bubble.active-mobile.show{opacity:1!important}
+    #bubbleArea .bubble{width:min(83vw,330px)!important;max-width:min(83vw,330px);padding:12px 15px;border-radius:20px}
+    /* On very narrow screens, present only the latest speaking/thinking card. */
+    #bubbleArea .bubble:not(.active-mobile){opacity:0!important;pointer-events:none!important}
+    #bubbleArea .bubble.active-mobile.show{opacity:1!important}
     #bubbleTethers .thought-line{display:none}
     .choice-deck{flex-direction:column;width:min(94vw,420px)}
     .choice{min-width:100%;max-width:100%}
@@ -583,8 +584,8 @@ function animate(time){
   // Tiny torso nod when a line appears. The GLB poses remain unchanged.
   const pulseAge=time-speakerPulse.at;
   const amp=(pulseAge>=0 && pulseAge<1450) ? Math.sin(Math.min(1,pulseAge/1450)*Math.PI) : 0;
-  femaleRoot.rotation.z= speakerPulse.actor==='female' ? 0.035*amp : 0;
-  maleRoot.rotation.z= speakerPulse.actor==='male' ? -0.035*amp : 0;
+  femaleRoot.rotation.z= speakerPulse.actor==='female' ? (speakerPulse.thought?0.025:0.065)*amp : 0;
+  maleRoot.rotation.z= speakerPulse.actor==='male' ? -(speakerPulse.thought?0.025:0.065)*amp : 0;
   renderer.render(scene,camera);
   if(time-lastBubbleFrame>140){updateActorBubbles();lastBubbleFrame=time;}
 }
@@ -592,88 +593,90 @@ function setProgress(){
   ui.progressText.textContent = String(state.index+1).padStart(2,'0')+' / 04';
   ui.progressDots.innerHTML = scenes.map((_,i)=>`<i class="${i<=state.index?'on':''}"></i>`).join('');
 }
+const speechTimers=[];
+function clearSpeechTimers(){while(speechTimers.length) clearTimeout(speechTimers.pop());}
+function speechLater(fn,delay){ speechTimers.push(setTimeout(fn,delay)); }
 function hideBubbles(){
-  [ui.otherOut,ui.otherIn,ui.meOut,ui.meIn].forEach(el=>el.classList.remove('show','active-mobile'));
+  for(const el of [ui.otherOut,ui.otherIn,ui.meOut,ui.meIn]){
+    el.classList.remove('show','active-mobile','spoken-now');
+  }
   requestAnimationFrame(updateActorBubbles);
 }
 function showSpeech(el){
+  // Never more than one bubble per character. That makes the exchange feel spoken,
+  // not like four information cards floating around unrelated to the models.
+  const sameActor = (el===ui.meOut || el===ui.meIn) ? [ui.meOut,ui.meIn] : [ui.otherOut,ui.otherIn];
+  sameActor.forEach(b=>{if(b!==el)b.classList.remove('show','active-mobile','spoken-now');});
   if(window.innerWidth<=680){
     [ui.otherOut,ui.otherIn,ui.meOut,ui.meIn].forEach(b=>b.classList.remove('active-mobile'));
     el.classList.add('active-mobile');
   }
-  el.classList.add('show');
-  if(el===ui.meOut || el===ui.otherOut){
-    speakerPulse={actor:el===ui.meOut?'female':'male',at:performance.now(),thought:false};
-  }
+  el.classList.remove('spoken-now');
+  void el.offsetWidth; // restart animation
+  el.classList.add('spoken-now','show');
+  speakerPulse={actor:(el===ui.meOut || el===ui.meIn)?'female':'male',at:performance.now(),thought:(el===ui.meIn || el===ui.otherIn)};
   requestAnimationFrame(updateActorBubbles);
 }
 function setBubble(el, text){ el.querySelector('.text').textContent = text; }
-// Project the two real 3D actors into CSS pixels and place dialogue immediately beside them.
-// The female actor is on screen-left and the male actor on screen-right.
+
 const bubblePairs = [
-  {side:'left',root:()=>femaleRoot,out:ui.meOut,inner:ui.meIn,line:'lineMeOut',thoughtLine:'lineMeIn',dot:'dotMeOut'},
+  {side:'left', root:()=>femaleRoot, out:ui.meOut, inner:ui.meIn, line:'lineMeOut', thoughtLine:'lineMeIn', dot:'dotMeOut'},
   {side:'right',root:()=>maleRoot,out:ui.otherOut,inner:ui.otherIn,line:'lineOtherOut',thoughtLine:'lineOtherIn',dot:'dotOtherOut'}
 ];
 const bubbleSvg=document.getElementById('bubbleTethers');
 function clampBetween(x,lo,hi){return Math.max(lo,Math.min(hi,x));}
-function screenPoint(root, height){
+function screenPoint(root,height){
   const pos=new THREE.Vector3(0,height,0).applyMatrix4(root.matrixWorld).project(camera);
   return {x:(pos.x*.5+.5)*window.innerWidth,y:(-.5*pos.y+.5)*window.innerHeight};
 }
-function placeLine(id,fromX,fromY,toX,toY,visible,dashed=false){
-  const p=document.getElementById(id); if(!p)return;
-  const elbowX=(fromX+toX)*.5;
-  p.setAttribute('d',`M ${fromX.toFixed(1)} ${fromY.toFixed(1)} C ${elbowX.toFixed(1)} ${fromY.toFixed(1)} ${elbowX.toFixed(1)} ${toY.toFixed(1)} ${toX.toFixed(1)} ${toY.toFixed(1)}`);
+function placeLine(id,fromX,fromY,toX,toY,visible){
+  const p=document.getElementById(id);if(!p)return;
+  const elbowX=(fromX+toX)/2;
+  p.setAttribute('d',`M ${fromX.toFixed(1)} ${fromY.toFixed(1)} Q ${elbowX.toFixed(1)} ${(fromY+toY)/2} ${toX.toFixed(1)} ${toY.toFixed(1)}`);
   p.classList.toggle('is-shown',visible);
 }
 function updateActorBubbles(){
-  if(!camera || !renderer || ui.game.classList.contains('hidden'))return;
+  if(!camera || !renderer || ui.game.classList.contains('hidden')) return;
   const W=window.innerWidth,H=window.innerHeight;
-  bubbleSvg.setAttribute('viewBox',`0 0 ${W} ${H}`);
-  // The choice bar is floating at the bottom. Keep it free of dialogue.
-  const deck=document.querySelector('.choice-wrap');
-  const deckHeight=deck?deck.getBoundingClientRect().height:190;
-  const topLimit=(W<=680?136:Math.min(174,Math.max(118,H*.16)));
-  const bottomLimit=H-Math.max(118,deckHeight+22);
   const mobile=W<=680;
+  bubbleSvg.setAttribute('viewBox',`0 0 ${W} ${H}`);
+  const dock=document.querySelector('.choice-wrap');
+  const dockHeight=dock?dock.getBoundingClientRect().height:150;
+  const topEdge=Math.max(112,document.querySelector('.topbar').getBoundingClientRect().bottom+16);
+  const lowerEdge=H-dockHeight-20;
   camera.updateMatrixWorld(true);
+  // Separate screen halves ensure opposing dialogue cards never overlap,
+  // while each card is tethered to the projected face of the correct actor.
   for(const pair of bubblePairs){
     const root=pair.root();root.updateMatrixWorld(true);
-    const head=screenPoint(root,3.12);
-    const chin=screenPoint(root,2.61);
-    const width = mobile?Math.min(350,W*.82):Math.min(300,Math.max(170,pair.side==='left'?head.x-80:W-head.x-80));
-    pair.out.style.width=width+'px';pair.inner.style.width=width+'px';
-    const outH=pair.out.offsetHeight,innerH=pair.inner.offsetHeight;
-    const pairHeight=outH+13+innerH;
-    let y = clampBetween(head.y-outH*.66, topLimit, Math.max(topLimit,bottomLimit-pairHeight));
-    let x;
-    if(pair.side==='left')x=head.x-width-69;
-    else x=head.x+69;
-    x=clampBetween(x,12,W-width-12);
+    const head=screenPoint(root,3.08);
+    const face=screenPoint(root,2.82);
+    const width=mobile?Math.min(W*.83,330):Math.min(295,Math.max(175,W*.5-46));
+    const active=pair.inner.classList.contains('show')?pair.inner:pair.out;
+    for(const card of [pair.out,pair.inner])card.style.width=width+'px';
+    const cardH=active.offsetHeight || 110;
+    let x,y;
     if(mobile){
-      // Active card near the speaking actor without overlapping the button dock.
-      const active=(pair.out.classList.contains('active-mobile') && pair.out.classList.contains('show'))?pair.out:
-                   (pair.inner.classList.contains('active-mobile') && pair.inner.classList.contains('show'))?pair.inner:null;
-      if(active){
-        x=clampBetween(head.x+(pair.side==='left'?-width-12:12),10,W-width-10);
-        y=clampBetween(head.y-120,topLimit,Math.max(topLimit,bottomLimit-active.offsetHeight));
-        active.style.left=x+'px';active.style.top=y+'px';
-      }
-      for(const el of [pair.out,pair.inner])if(el!==active){el.style.left=x+'px';el.style.top=y+'px';}
-    }else{
-      pair.out.style.left=x+'px';pair.out.style.top=y+'px';
-      pair.inner.style.left=x+'px';pair.inner.style.top=(y+outH+13)+'px';
+      x=clampBetween(head.x-width*.5,10,W-width-10);
+      y=clampBetween(head.y-cardH-45,topEdge,Math.max(topEdge,lowerEdge-cardH));
+    } else {
+      const preferred=pair.side==='left' ? head.x-width-22 : head.x+22;
+      x=pair.side==='left' ? clampBetween(preferred,14,Math.max(14,W/2-width-18))
+                           : clampBetween(preferred,W/2+18,Math.max(W/2+18,W-width-14));
+      y=clampBetween(head.y-cardH*.62,topEdge,Math.max(topEdge,lowerEdge-cardH));
     }
-    const outY = y+Math.min(Math.max(outH*.55,30),outH-17);
-    const lineStartX=pair.side==='left'?x+width:x;
-    const outVisible=pair.out.classList.contains('show') && (!mobile || pair.out.classList.contains('active-mobile'));
-    placeLine(pair.line,lineStartX,outY,head.x+(pair.side==='left'?-6:6),head.y-12,outVisible);
-    const thoughtY=mobile?y+innerH*.5:y+outH+13+innerH*.45;
-    const innerVisible=pair.inner.classList.contains('show') && (!mobile || pair.inner.classList.contains('active-mobile'));
-    placeLine(pair.thoughtLine,lineStartX,thoughtY,chin.x+(pair.side==='left'?-14:14),chin.y,innerVisible,true);
+    for(const card of [pair.out,pair.inner]){
+      card.style.left=x+'px';card.style.top=y+'px';
+    }
+    const visibleOut=pair.out.classList.contains('show') && (!mobile || pair.out.classList.contains('active-mobile'));
+    const visibleIn=pair.inner.classList.contains('show') && (!mobile || pair.inner.classList.contains('active-mobile'));
+    const lineFromX=pair.side==='left'?x+width:x;
+    const lineFromY=y+cardH*.63;
+    const faceX=face.x+(pair.side==='left'?-11:11), faceY=face.y-6;
+    placeLine(pair.line,lineFromX,lineFromY,faceX,faceY,visibleOut);
+    placeLine(pair.thoughtLine,lineFromX,lineFromY,faceX,faceY,visibleIn);
     const dot=document.getElementById(pair.dot);
-    dot.setAttribute('cx',head.x+(pair.side==='left'?-6:6));dot.setAttribute('cy',head.y-12);
-    dot.classList.toggle('is-shown',outVisible);
+    dot.setAttribute('cx',faceX);dot.setAttribute('cy',faceY);dot.classList.toggle('is-shown',visibleOut);
   }
 }
 
@@ -682,6 +685,7 @@ function showOpener(text){
   if(text){ setBubble(ui.otherOut, text); showSpeech(ui.otherOut); }
 }
 function renderScene(){
+  clearSpeechTimers();
   state.locked = false;
   const s = scenes[state.index];
   setProgress();
@@ -717,11 +721,11 @@ function selectChoice(index){
   ui.choiceNote.textContent = '말은 화면에서 사라져도, 마음속에서는 오래 남을 수 있다.';
   ui.sceneHint.classList.remove('show');
 
-  setTimeout(()=>showSpeech(ui.otherOut), 120);
-  setTimeout(()=>showSpeech(ui.meIn), 1700);
-  setTimeout(()=>showSpeech(ui.meOut), 3400);
-  setTimeout(()=>showSpeech(ui.otherIn), 5100);
-  setTimeout(()=>ui.nextBtn.classList.add('show'), 7800);
+  speechLater(()=>showSpeech(ui.otherOut), 150);
+  speechLater(()=>showSpeech(ui.meIn), 2650);
+  speechLater(()=>showSpeech(ui.meOut), 5300);
+  speechLater(()=>showSpeech(ui.otherIn), 7950);
+  speechLater(()=>ui.nextBtn.classList.add('show'), 10900);
 }
 const poeticEndings = {
   warrior:{code:'ENDING 01 / 작별',name:'작별의 전사',caption:'남이 지어 준 이름에 작별을 고하는 사람.',
@@ -774,6 +778,7 @@ function finishGame(){
 }
 ui.nextBtn.onclick = ()=>{ if(state.index >= scenes.length-1) finishGame(); else { state.index += 1; renderScene(); } };
 function resetGame(){
+  clearSpeechTimers();
   state.index = 0; state.scores = {resist:0,suspend:0,weight:0}; state.history = [];
   setHidden(ui.end, true); setHidden(ui.start, false); setHidden(ui.game, true);
 }

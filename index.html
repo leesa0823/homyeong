@@ -55,7 +55,7 @@
   .bubble .text{font-size:clamp(15px,1.45vw,20px);line-height:1.6;letter-spacing:-.02em;white-space:pre-line}
   .bubble.thought{background:rgba(20,22,29,.9);color:#f8f5f1;border-color:rgba(255,255,255,.08)}
   .bubble.thought .who{color:#e8d8cf}.bubble.thought.me .who{color:#d6e0f8}
-  /* Speech anchored to each character's chest so the face remains visible. */
+  /* Speech anchored to each real 3D character's head, not to screen columns. */
   #bubbleArea{inset:0;padding:0;z-index:4;pointer-events:none}
   #bubbleTethers{position:absolute;inset:0;width:100%;height:100%;overflow:visible;pointer-events:none;z-index:0}
   #bubbleArea .bubble{
@@ -646,25 +646,24 @@ function updateActorBubbles(){
   const lowerEdge=H-dockHeight-20;
   camera.updateMatrixWorld(true);
   // Separate screen halves ensure opposing dialogue cards never overlap,
-  // while each card is tethered to the projected upper chest of its actor.
+  // while each card is tethered to the projected face of the correct actor.
   for(const pair of bubblePairs){
     const root=pair.root();root.updateMatrixWorld(true);
-    // Attach the speech bubble to the upper chest, not to the eyes.
-    // Character models are normalized to ~3.65 world units in height.
-    const chest=screenPoint(root,1.98);
+    const head=screenPoint(root,3.08);
+    const face=screenPoint(root,2.82);
     const width=mobile?Math.min(W*.83,330):Math.min(295,Math.max(175,W*.5-46));
     const active=pair.inner.classList.contains('show')?pair.inner:pair.out;
     for(const card of [pair.out,pair.inner])card.style.width=width+'px';
     const cardH=active.offsetHeight || 110;
     let x,y;
     if(mobile){
-      x=clampBetween(chest.x-width*.5,10,W-width-10);
-      y=clampBetween(chest.y-cardH*.48,topEdge,Math.max(topEdge,lowerEdge-cardH));
+      x=clampBetween(head.x-width*.5,10,W-width-10);
+      y=clampBetween(head.y-cardH-45,topEdge,Math.max(topEdge,lowerEdge-cardH));
     } else {
-      const preferred=pair.side==='left' ? chest.x-width-34 : chest.x+34;
+      const preferred=pair.side==='left' ? head.x-width-22 : head.x+22;
       x=pair.side==='left' ? clampBetween(preferred,14,Math.max(14,W/2-width-18))
                            : clampBetween(preferred,W/2+18,Math.max(W/2+18,W-width-14));
-      y=clampBetween(chest.y-cardH*.48,topEdge,Math.max(topEdge,lowerEdge-cardH));
+      y=clampBetween(head.y-cardH*.62,topEdge,Math.max(topEdge,lowerEdge-cardH));
     }
     for(const card of [pair.out,pair.inner]){
       card.style.left=x+'px';card.style.top=y+'px';
@@ -673,11 +672,11 @@ function updateActorBubbles(){
     const visibleIn=pair.inner.classList.contains('show') && (!mobile || pair.inner.classList.contains('active-mobile'));
     const lineFromX=pair.side==='left'?x+width:x;
     const lineFromY=y+cardH*.63;
-    const chestX=chest.x+(pair.side==='left'?-17:17), chestY=chest.y;
-    placeLine(pair.line,lineFromX,lineFromY,chestX,chestY,visibleOut);
-    placeLine(pair.thoughtLine,lineFromX,lineFromY,chestX,chestY,visibleIn);
+    const faceX=face.x+(pair.side==='left'?-11:11), faceY=face.y-6;
+    placeLine(pair.line,lineFromX,lineFromY,faceX,faceY,visibleOut);
+    placeLine(pair.thoughtLine,lineFromX,lineFromY,faceX,faceY,visibleIn);
     const dot=document.getElementById(pair.dot);
-    dot.setAttribute('cx',chestX);dot.setAttribute('cy',chestY);dot.classList.toggle('is-shown',visibleOut);
+    dot.setAttribute('cx',faceX);dot.setAttribute('cy',faceY);dot.classList.toggle('is-shown',visibleOut);
   }
 }
 

@@ -55,8 +55,33 @@
   .bubble .text{font-size:clamp(15px,1.45vw,20px);line-height:1.6;letter-spacing:-.02em;white-space:pre-line}
   .bubble.thought{background:rgba(20,22,29,.9);color:#f8f5f1;border-color:rgba(255,255,255,.08)}
   .bubble.thought .who{color:#e8d8cf}.bubble.thought.me .who{color:#d6e0f8}
-  .bubble.otherOut{left:24px;top:178px}.bubble.otherIn{left:24px;bottom:240px}
-  .bubble.meOut{right:24px;top:178px}.bubble.meIn{right:24px;bottom:240px}
+  /* 3D actor anchored speech: female on left, male on right; JS computes screen positions. */
+  #bubbleArea{inset:0;padding:0;z-index:4}
+  #bubbleTethers{position:absolute;inset:0;width:100%;height:100%;overflow:visible;pointer-events:none;z-index:0}
+  .bubble{z-index:1;left:0;right:auto;top:0;bottom:auto;max-width:none;min-width:0;width:280px;
+    padding:14px 17px;border-radius:22px;overflow-wrap:anywhere;
+    filter:drop-shadow(0 7px 15px rgba(15,17,24,.13));
+    transition:opacity .48s ease,transform .48s cubic-bezier(.2,.8,.2,1),box-shadow .4s ease;
+  }
+  .bubble.meOut,.bubble.meIn{border-left:4px solid #a9bde5}
+  .bubble.otherOut,.bubble.otherIn{border-right:4px solid #dfafbf}
+  .bubble.thought{border-radius:25px}
+  .bubble.thought .who::before{border-radius:50%}
+  .bubble .text{font-size:clamp(14px,1.25vw,18px);line-height:1.5}
+  .bubble .who{font-size:11px;letter-spacing:.05em;margin-bottom:5px}
+  .bubble.thought{background:rgba(26,29,39,.92)}
+  .bubble.show{box-shadow:0 18px 45px rgba(0,0,0,.18)}
+  #bubbleArea .bubble.speaker{transform-origin:50% 90%}
+  .bubble.otherOut,.bubble.otherIn,.bubble.meOut,.bubble.meIn{left:0;right:auto;top:0;bottom:auto}
+  /* The lines, rather than decorative corners, point precisely to the speaker's 3D face. */
+  #bubbleTethers path{fill:none;stroke-width:2.3;stroke-linecap:round;stroke-linejoin:round;opacity:0;transition:opacity .4s}
+  #bubbleTethers path.is-shown{opacity:.95}
+  #bubbleTethers .speech-line{stroke:#f5f2ef;filter:drop-shadow(0 2px 3px rgba(0,0,0,.28))}
+  #bubbleTethers .thought-line{stroke:#e8d9e2;stroke-dasharray:4 8;stroke-width:1.8;opacity:0}
+  #bubbleTethers .thought-line.is-shown{opacity:.78}
+  #bubbleTethers .endpoint{fill:#fffaf2;opacity:0;transition:opacity .3s}
+  #bubbleTethers .endpoint.is-shown{opacity:.85}
+
   .choice-wrap{position:absolute;left:0;right:0;bottom:max(18px,env(safe-area-inset-bottom));display:flex;flex-direction:column;align-items:center;gap:12px;padding:0 16px 10px;pointer-events:none}
   .choice-deck{display:flex;flex-wrap:wrap;justify-content:center;gap:12px;max-width:min(96vw,1120px);pointer-events:auto}
   .choice{display:flex;align-items:center;gap:10px;padding:16px 18px;border-radius:22px;border:1px solid rgba(255,255,255,.12);background:rgba(16,18,24,.54);backdrop-filter:blur(14px);color:#fff;cursor:pointer;box-shadow:var(--shadow);min-width:min(30vw,260px);max-width:min(30vw,340px);text-align:left;transition:.25s transform,.25s background,.25s border-color,.25s opacity}
@@ -86,7 +111,33 @@
   .score-card .num{margin-top:8px;font-size:13px;color:#f6f1ea}
   .recap{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:18px}
   .recap div{padding:14px 15px;border-radius:18px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);line-height:1.65;color:#efe8df}
-  .closing{margin-top:22px;padding:18px;border-radius:18px;background:rgba(255,249,242,.9);color:#2d292c;line-height:1.8}
+  .closing{margin-top:20px;padding:19px 22px;border-radius:18px;background:linear-gradient(115deg,rgba(255,248,243,.98),rgba(234,231,250,.94));color:#2d292c;line-height:1.8}
+  .closing .ending-line{font-size:clamp(19px,2.2vw,29px);letter-spacing:-.04em;font-weight:900;line-height:1.4}
+  .closing .campaign-line{margin-top:9px;font-size:14px;line-height:1.75;color:#605862}
+  #end{overflow:auto;align-items:flex-start;scrollbar-gutter:stable}
+  #end .sheet{width:min(1060px,100%);margin:auto}
+  #end .kicker{margin-bottom:10px}
+  #end h1{font-size:clamp(26px,3.4vw,40px)}
+  .result-epigraph{font-size:clamp(16px,2vw,23px);color:#ece0e6;letter-spacing:-.03em;margin-top:18px;line-height:1.6}
+  .result-source{display:block;font-size:12px;font-weight:600;color:#a7a0b4;margin-top:7px;letter-spacing:.03em}
+  .type-box{position:relative;overflow:hidden;padding:24px 28px;margin-top:22px;background:linear-gradient(135deg,#2a2734 0%,#24283b 68%,#212633 100%)}
+  .type-box::before{content:'';position:absolute;right:-105px;top:-132px;width:360px;height:360px;background:radial-gradient(circle,#eabfcf33 0%,transparent 69%);pointer-events:none}
+  .type-code{font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:#d7b2c2;font-weight:850;margin-bottom:10px}
+  .type-name{font-size:clamp(36px,4.5vw,58px);letter-spacing:-.075em;line-height:1.15}
+  .type-caption{font-size:clamp(15px,2vw,21px);color:#eecdd8;font-weight:700;margin-top:10px;line-height:1.5;letter-spacing:-.03em}
+  .type-desc{font-size:15px;line-height:1.8;color:#e5e1ea;max-width:760px;margin-top:15px}
+  .type-question{margin-top:18px;color:#eee7ed;font-size:15px;border-left:3px solid #e8bacb;padding-left:14px;line-height:1.7}
+  .result-section-title{display:flex;align-items:center;gap:10px;margin-top:23px;color:#f1e9f2;font-size:14px;font-weight:800;letter-spacing:-.01em}
+  .result-section-title small{color:#a7a2b5;font-size:11px;font-weight:500}
+  .score-grid{margin-top:12px}
+  .score-card{background:linear-gradient(160deg,rgba(255,255,255,.07),rgba(255,255,255,.025));padding:18px}
+  .score-card .label{font-size:13px;color:#e0d7df}
+  .score-card .num{font-size:14px;font-weight:800;margin-top:10px;color:#f5e6ee}
+  .score-note{font-size:12px;color:#a8a3b0;margin-top:10px;line-height:1.65}
+  .recap{margin-top:12px}
+  .recap div{line-height:1.65}
+  #end .screen-actions{margin-top:20px}
+  @media(max-width:680px){#end .sheet{padding:24px 18px}.score-grid{grid-template-columns:1fr}.recap{grid-template-columns:1fr}.type-box{padding:21px}.type-name{font-size:38px}}
   #loading{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:linear-gradient(180deg,rgba(14,16,23,.88),rgba(8,10,14,.92));z-index:20;flex-direction:column;gap:12px}
   #loading .ring{width:54px;height:54px;border:4px solid rgba(255,255,255,.12);border-top-color:#e9c9d4;border-radius:50%;animation:spin 1s linear infinite}
   #loading p{margin:0;color:#f3ede6}
@@ -101,24 +152,19 @@
   }
   /* More space on low-height Edge windows */
   @media (min-width:681px) and (max-height:760px){
-    .bubble.otherOut,.bubble.meOut{top:132px}
-    .bubble.otherIn,.bubble.meIn{bottom:176px}
     .bubble{padding:12px 15px;border-radius:19px}
     .choice{padding:12px 15px}
     .choice-wrap{gap:7px}
     .scene-hint{top:84px}
   }
   @media (max-width:680px){
-    .scene-hint{top:116px;font-size:13px;padding:10px 14px}
-    #bubbleArea{padding-bottom:270px;padding-top:142px}
-    .bubble{max-width:min(84vw,350px);left:50%!important;right:auto!important;transform:translate(-50%,10px) scale(.97);min-width:0}
-    .bubble.show{transform:translate(-50%,0) scale(1)}
-    .bubble{max-width:min(88vw,360px);padding:13px 15px}
-    .bubble.otherOut,.bubble.meOut{top:148px;bottom:auto}
-    .bubble.otherIn,.bubble.meIn{top:240px;bottom:auto}
-    /* Hide previously shown bubbles on narrow screens; keep active one readable. */
+    .scene-hint{top:112px;font-size:12px;padding:9px 13px}
+    #bubbleArea{padding:0}
+    .bubble{width:min(82vw,360px)!important;max-width:min(82vw,360px);padding:12px 14px;border-radius:18px}
+    /* Narrow screens show the latest speaker, positioned from the actor's head where possible. */
     .bubble:not(.active-mobile){opacity:0!important;pointer-events:none!important}
     .bubble.active-mobile.show{opacity:1!important}
+    #bubbleTethers .thought-line{display:none}
     .choice-deck{flex-direction:column;width:min(94vw,420px)}
     .choice{min-width:100%;max-width:100%}
   }
@@ -148,6 +194,11 @@
       </div>
       <div id="sceneHint" class="scene-hint"></div>
       <div id="bubbleArea">
+        <svg id="bubbleTethers" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <path id="lineOtherOut" class="speech-line"/><path id="lineMeOut" class="speech-line"/>
+          <path id="lineOtherIn" class="thought-line"/><path id="lineMeIn" class="thought-line"/>
+          <circle id="dotOtherOut" class="endpoint" r="4"/><circle id="dotMeOut" class="endpoint" r="4"/>
+        </svg>
         <div id="otherOut" class="bubble otherOut"><div class="who">상대의 말</div><div class="text"></div></div>
         <div id="meOut" class="bubble meOut me"><div class="who">내가 한 말</div><div class="text"></div></div>
         <div id="otherIn" class="bubble otherIn thought"><div class="who">상상한 상대의 마음</div><div class="text"></div></div>
@@ -163,20 +214,30 @@
 
   <section id="end" class="screen hidden">
     <div class="sheet">
-      <div class="kicker">result</div>
-      <h1>당신의 언어 습관</h1>
+      <div class="kicker">CHOICE RECORD / 네 번의 호명</div>
+      <h1>이번에 당신이 고른 언어</h1>
+      <div class="result-epigraph">“내가 내 이름을 지을 수 없는 곳, 안녕”<span class="result-source">김혜순, 「아침 인사」</span></div>
       <div class="type-box">
+        <div id="typeCode" class="type-code">ENDING 01</div>
         <div id="typeName" class="type-name"></div>
+        <div id="typeCaption" class="type-caption"></div>
         <div id="typeDesc" class="type-desc"></div>
+        <div id="typeQuestion" class="type-question"></div>
       </div>
+      <div class="result-section-title">네 번의 선택이 남긴 경향 <small>게임 내부 지표</small></div>
       <div class="score-grid">
-        <div class="score-card"><div class="label">규정에 선을 긋는 힘</div><div class="bar"><b id="barResist" style="width:0%"></b></div><div class="num" id="numResist"></div></div>
-        <div class="score-card"><div class="label">타인을 함부로 단정하지 않으려는 감각</div><div class="bar"><b id="barSuspend" style="width:0%"></b></div><div class="num" id="numSuspend"></div></div>
-        <div class="score-card"><div class="label">말의 무게를 자각하는 정도</div><div class="bar"><b id="barWeight" style="width:0%"></b></div><div class="num" id="numWeight"></div></div>
+        <div class="score-card"><div class="label">규정에 대한 저항</div><div class="bar"><b id="barResist" style="width:0%"></b></div><div class="num" id="numResist"></div></div>
+        <div class="score-card"><div class="label">타인의 맥락에 대한 고려</div><div class="bar"><b id="barSuspend" style="width:0%"></b></div><div class="num" id="numSuspend"></div></div>
+        <div class="score-card"><div class="label">말의 무게를 생각한 정도</div><div class="bar"><b id="barWeight" style="width:0%"></b></div><div class="num" id="numWeight"></div></div>
       </div>
+      <div class="score-note">* 점수는 게임 안의 선택을 비교한 값이며, 실제 성격이나 타인에 대한 태도를 진단하지 않습니다.</div>
+      <div class="result-section-title">당신의 선택 기록</div>
       <div id="recap" class="recap"></div>
-      <div class="closing">타인을 이해한다는 것은 그 사람을 완전히 안다는 뜻이 아니다. 오히려 <b>완전히 알 수 없다는 사실을 먼저 기억하는 일</b>에 가깝다. 규정하지 않는 사회는 거창한 곳에서 시작되지 않는다. “그냥 한 말”을 한 번 더 돌아보는 언어에서 시작된다.</div>
-      <div class="screen-actions"><button class="primary" id="restartBtn">다시 하기</button></div>
+      <div class="closing">
+        <div class="ending-line">이 결과도 당신을 전부 설명하지는 못합니다.</div>
+        <div class="campaign-line">타인을 이해한다는 것은 완전히 안다는 뜻이 아닙니다. 모르는 부분을 남겨 두고, 무심코 던진 말 하나를 다시 생각하는 것. 규정하지 않는 언어문화는 거기서 시작됩니다.</div>
+      </div>
+      <div class="screen-actions"><button class="primary" id="restartBtn">다시 선택하기</button></div>
     </div>
   </section>
 
@@ -270,8 +331,11 @@ const ui = {
   otherIn: document.getElementById('otherIn'),
   meOut: document.getElementById('meOut'),
   meIn: document.getElementById('meIn'),
+  typeCode: document.getElementById('typeCode'),
   typeName: document.getElementById('typeName'),
+  typeCaption: document.getElementById('typeCaption'),
   typeDesc: document.getElementById('typeDesc'),
+  typeQuestion: document.getElementById('typeQuestion'),
   barResist: document.getElementById('barResist'), numResist: document.getElementById('numResist'),
   barSuspend: document.getElementById('barSuspend'), numSuspend: document.getElementById('numSuspend'),
   barWeight: document.getElementById('barWeight'), numWeight: document.getElementById('numWeight'),
@@ -346,6 +410,7 @@ function onResize(){
   camera.position.y = window.innerWidth < 700 ? 2.45 : 2.25;
   camera.updateProjectionMatrix();
   renderer.setSize(window.innerWidth, window.innerHeight);
+  requestAnimationFrame(updateActorBubbles);
 }
 function mat(color, rough=.92, metal=.02){ return new THREE.MeshStandardMaterial({color, roughness:rough, metalness:metal}); }
 function roundedBox(w,h,d,r=0.06,color=0xffffff){
@@ -502,6 +567,8 @@ function setActorState(actor,mood){
   }
 }
 let lastFrame = 0;
+let lastBubbleFrame=0;
+let speakerPulse = {actor:null,at:0,thought:false};
 function animate(time){
   requestAnimationFrame(animate);
   if(!renderer || document.hidden) return;
@@ -513,7 +580,13 @@ function animate(time){
   maleRoot.position.y = -bob*.6;
   femaleRoot.rotation.y += (0.32 - femaleRoot.rotation.y) * 0.08;
   maleRoot.rotation.y += (-0.38 - maleRoot.rotation.y) * 0.08;
+  // Tiny torso nod when a line appears. The GLB poses remain unchanged.
+  const pulseAge=time-speakerPulse.at;
+  const amp=(pulseAge>=0 && pulseAge<1450) ? Math.sin(Math.min(1,pulseAge/1450)*Math.PI) : 0;
+  femaleRoot.rotation.z= speakerPulse.actor==='female' ? 0.035*amp : 0;
+  maleRoot.rotation.z= speakerPulse.actor==='male' ? -0.035*amp : 0;
   renderer.render(scene,camera);
+  if(time-lastBubbleFrame>140){updateActorBubbles();lastBubbleFrame=time;}
 }
 function setProgress(){
   ui.progressText.textContent = String(state.index+1).padStart(2,'0')+' / 04';
@@ -521,6 +594,7 @@ function setProgress(){
 }
 function hideBubbles(){
   [ui.otherOut,ui.otherIn,ui.meOut,ui.meIn].forEach(el=>el.classList.remove('show','active-mobile'));
+  requestAnimationFrame(updateActorBubbles);
 }
 function showSpeech(el){
   if(window.innerWidth<=680){
@@ -528,8 +602,81 @@ function showSpeech(el){
     el.classList.add('active-mobile');
   }
   el.classList.add('show');
+  if(el===ui.meOut || el===ui.otherOut){
+    speakerPulse={actor:el===ui.meOut?'female':'male',at:performance.now(),thought:false};
+  }
+  requestAnimationFrame(updateActorBubbles);
 }
 function setBubble(el, text){ el.querySelector('.text').textContent = text; }
+// Project the two real 3D actors into CSS pixels and place dialogue immediately beside them.
+// The female actor is on screen-left and the male actor on screen-right.
+const bubblePairs = [
+  {side:'left',root:()=>femaleRoot,out:ui.meOut,inner:ui.meIn,line:'lineMeOut',thoughtLine:'lineMeIn',dot:'dotMeOut'},
+  {side:'right',root:()=>maleRoot,out:ui.otherOut,inner:ui.otherIn,line:'lineOtherOut',thoughtLine:'lineOtherIn',dot:'dotOtherOut'}
+];
+const bubbleSvg=document.getElementById('bubbleTethers');
+function clampBetween(x,lo,hi){return Math.max(lo,Math.min(hi,x));}
+function screenPoint(root, height){
+  const pos=new THREE.Vector3(0,height,0).applyMatrix4(root.matrixWorld).project(camera);
+  return {x:(pos.x*.5+.5)*window.innerWidth,y:(-.5*pos.y+.5)*window.innerHeight};
+}
+function placeLine(id,fromX,fromY,toX,toY,visible,dashed=false){
+  const p=document.getElementById(id); if(!p)return;
+  const elbowX=(fromX+toX)*.5;
+  p.setAttribute('d',`M ${fromX.toFixed(1)} ${fromY.toFixed(1)} C ${elbowX.toFixed(1)} ${fromY.toFixed(1)} ${elbowX.toFixed(1)} ${toY.toFixed(1)} ${toX.toFixed(1)} ${toY.toFixed(1)}`);
+  p.classList.toggle('is-shown',visible);
+}
+function updateActorBubbles(){
+  if(!camera || !renderer || ui.game.classList.contains('hidden'))return;
+  const W=window.innerWidth,H=window.innerHeight;
+  bubbleSvg.setAttribute('viewBox',`0 0 ${W} ${H}`);
+  // The choice bar is floating at the bottom. Keep it free of dialogue.
+  const deck=document.querySelector('.choice-wrap');
+  const deckHeight=deck?deck.getBoundingClientRect().height:190;
+  const topLimit=(W<=680?136:Math.min(174,Math.max(118,H*.16)));
+  const bottomLimit=H-Math.max(118,deckHeight+22);
+  const mobile=W<=680;
+  camera.updateMatrixWorld(true);
+  for(const pair of bubblePairs){
+    const root=pair.root();root.updateMatrixWorld(true);
+    const head=screenPoint(root,3.12);
+    const chin=screenPoint(root,2.61);
+    const width = mobile?Math.min(350,W*.82):Math.min(300,Math.max(170,pair.side==='left'?head.x-80:W-head.x-80));
+    pair.out.style.width=width+'px';pair.inner.style.width=width+'px';
+    const outH=pair.out.offsetHeight,innerH=pair.inner.offsetHeight;
+    const pairHeight=outH+13+innerH;
+    let y = clampBetween(head.y-outH*.66, topLimit, Math.max(topLimit,bottomLimit-pairHeight));
+    let x;
+    if(pair.side==='left')x=head.x-width-69;
+    else x=head.x+69;
+    x=clampBetween(x,12,W-width-12);
+    if(mobile){
+      // Active card near the speaking actor without overlapping the button dock.
+      const active=(pair.out.classList.contains('active-mobile') && pair.out.classList.contains('show'))?pair.out:
+                   (pair.inner.classList.contains('active-mobile') && pair.inner.classList.contains('show'))?pair.inner:null;
+      if(active){
+        x=clampBetween(head.x+(pair.side==='left'?-width-12:12),10,W-width-10);
+        y=clampBetween(head.y-120,topLimit,Math.max(topLimit,bottomLimit-active.offsetHeight));
+        active.style.left=x+'px';active.style.top=y+'px';
+      }
+      for(const el of [pair.out,pair.inner])if(el!==active){el.style.left=x+'px';el.style.top=y+'px';}
+    }else{
+      pair.out.style.left=x+'px';pair.out.style.top=y+'px';
+      pair.inner.style.left=x+'px';pair.inner.style.top=(y+outH+13)+'px';
+    }
+    const outY = y+Math.min(Math.max(outH*.55,30),outH-17);
+    const lineStartX=pair.side==='left'?x+width:x;
+    const outVisible=pair.out.classList.contains('show') && (!mobile || pair.out.classList.contains('active-mobile'));
+    placeLine(pair.line,lineStartX,outY,head.x+(pair.side==='left'?-6:6),head.y-12,outVisible);
+    const thoughtY=mobile?y+innerH*.5:y+outH+13+innerH*.45;
+    const innerVisible=pair.inner.classList.contains('show') && (!mobile || pair.inner.classList.contains('active-mobile'));
+    placeLine(pair.thoughtLine,lineStartX,thoughtY,chin.x+(pair.side==='left'?-14:14),chin.y,innerVisible,true);
+    const dot=document.getElementById(pair.dot);
+    dot.setAttribute('cx',head.x+(pair.side==='left'?-6:6));dot.setAttribute('cy',head.y-12);
+    dot.classList.toggle('is-shown',outVisible);
+  }
+}
+
 function showOpener(text){
   hideBubbles();
   if(text){ setBubble(ui.otherOut, text); showSpeech(ui.otherOut); }
@@ -550,13 +697,14 @@ function renderScene(){
   ui.nextBtn.textContent = state.index === scenes.length-1 ? '결과 보기' : '다음 장면';
   ui.choiceDeck.innerHTML = s.choices.map((c,i)=>`<button class="choice" data-i="${i}"><span class="num">${i+1}</span><span class="label">${c.label}</span></button>`).join('');
   ui.choiceDeck.querySelectorAll('.choice').forEach(btn=>btn.onclick = ()=>selectChoice(+btn.dataset.i));
+  requestAnimationFrame(updateActorBubbles);
 }
 function selectChoice(index){
   if(state.locked) return;
   state.locked = true;
   const s = scenes[state.index];
   const c = s.choices[index];
-  state.history.push({scene:s.title, choice:c.label});
+  state.history.push({scene:s.title, choice:c.label, choiceIndex:index});
   state.scores.resist += c.score.resist;
   state.scores.suspend += c.score.suspend;
   state.scores.weight += c.score.weight;
@@ -575,33 +723,54 @@ function selectChoice(index){
   setTimeout(()=>showSpeech(ui.otherIn), 5100);
   setTimeout(()=>ui.nextBtn.classList.add('show'), 7800);
 }
+const poeticEndings = {
+  warrior:{code:'ENDING 01 / 작별',name:'작별의 전사',caption:'남이 지어 준 이름에 작별을 고하는 사람.',
+    desc:'당신은 기대나 낙인을 그대로 받아들이지 않고 자신의 말로 대답했습니다. 다만 저항하는 마음이 타인에게도 똑같은 자유를 남겼는지는 계속 물을 필요가 있습니다.',
+    question:'맞서는 용기는 필요합니다. 그런데 내가 맞서던 그 말투로 다른 사람을 규정하고 있지는 않았나요?'},
+  paradox:{code:'ENDING 02 / 역설',name:'이름의 역설',caption:'내 이름은 거부하면서, 남의 이름은 짓고 있었다.',
+    desc:'나를 향한 단정에는 분명히 선을 그었습니다. 그러나 타인의 행동 앞에서는 짧은 판단이 먼저 나왔습니다. 그 모순을 알아차리는 것부터 언어가 달라집니다.',
+    question:'내가 원하지 않는 설명을, 나는 누군가에게 건네고 있지는 않았나요?'},
+  margin:{code:'ENDING 03 / 여백',name:'이름 없는 여백',caption:'아직 모르는 것은 모르는 채로 남겨 두는 사람.',
+    desc:'당신은 서운함이나 불편함을 지우지 않으면서도, 그 감정만으로 상대의 전부를 결정하지 않으려 했습니다. 모른다고 말할 여유를 선택한 셈입니다.',
+    question:'한 사람을 완전히 알 수 없다면, 우리가 서로에게 남겨야 할 자리는 어디일까요?'},
+  shadow:{code:'ENDING 04 / 그림자',name:'호명의 그림자',caption:'남이 부른 이름에 조금씩 익숙해진 사람.',
+    desc:'당신은 당장의 갈등을 줄이거나 관계를 지키는 쪽을 택했습니다. 그런 선택에도 이유가 있습니다. 다만 반복된 말이 어느새 내 역할처럼 굳어지고 있지는 않은지 돌아볼 만합니다.',
+    question:'가볍게 들었던 말이 언제부터 나 자신을 설명하는 문장이 되었을까요?'},
+  unwritten:{code:'ENDING 05 / 가능성',name:'아직 쓰이지 않은 이름',caption:'어떤 이름으로도 완성되지 않은 사람.',
+    desc:'때로는 말하고 때로는 물러섰습니다. 한 가지 태도만이 늘 옳지는 않습니다. 중요한 것은 그때의 선택을 나와 타인의 전부로 굳혀 버리지 않는 일입니다.',
+    question:'다음에 같은 말을 들으면, 당신은 다른 문장을 고를 수도 있을까요?'}
+};
+function decidePoeticEnding(history, scores){
+  // A direct challenge in each scene, while refusing to repeat another person's label.
+  const c=history.map(x=>x.choiceIndex);
+  const allSpeakUp = c.length===4 && c[0]===1 && (c[1]===1 || c[1]===2) && (c[2]===1 || c[2]===2) && c[3]===1;
+  if(allSpeakUp) return poeticEndings.warrior;
+  const speaksForSelf=(c[0]===1 || c[1]===1 || c[1]===2);
+  const labelsOther=(c[2]===0 || c[3]===0);
+  if(speaksForSelf && labelsOther) return poeticEndings.paradox;
+  if(scores.suspend>=8 && scores.weight>=11) return poeticEndings.margin;
+  const avoidConflict=(c[0]!==1 && c[1]===0);
+  if(avoidConflict && scores.resist<=4) return poeticEndings.shadow;
+  return poeticEndings.unwritten;
+}
 function finishGame(){
-  const {resist,suspend,weight} = state.scores;
-  let typeName = '규정 앞에서 한 박자 쉬는 사람';
-  let typeDesc = '당신은 규정하는 말이 생기는 순간을 비교적 빨리 알아차린다. 누군가를 바로 설명해 버리기보다, 말이 남길 자국을 한 번 더 생각하는 쪽에 가깝다.';
-  if(resist >= 7 && suspend < 7){
-    typeName = '규정에 선을 긋지만, 쉽게 단정하기도 하는 사람';
-    typeDesc = '자신이 규정되는 건 금세 알아차리고 밀어내려 한다. 다만 타인을 볼 때는 상처나 피로가 먼저 앞서 한 문장으로 정리해 버릴 때도 있다.';
-  } else if(resist < 6 && suspend >= 7){
-    typeName = '규정을 오래 품지만, 남을 쉽게 규정하진 않는 사람';
-    typeDesc = '타인이 던진 말은 오래 남는 편이다. 대신 그 경험 때문에 남을 한마디로 묶는 일에는 더 조심스러워진다.';
-  } else if(resist < 6 && suspend < 6){
-    typeName = '익숙한 말을 따라가기 쉬운 사람';
-    typeDesc = '말의 힘을 모르는 것은 아니지만, 익숙한 표현을 그대로 이어 말할 가능성이 크다. 이 유형은 나쁘다기보다, 바뀌기 가장 좋은 출발점에 가깝다.';
-  }
-  if(weight >= 12 && suspend >= 8) {
-    typeName = '여백을 남기는 사람';
-    typeDesc = '당신은 내가 다 알 수 없다는 감각을 비교적 잘 지킨다. 그래서 규정을 완전히 없애진 못해도, 말을 조금 늦추고 여백을 남기는 쪽으로 움직인다.';
-  }
-  ui.typeName.textContent = typeName;
-  ui.typeDesc.textContent = typeDesc;
-  const max = 14;
-  ui.barResist.style.width = Math.min(100, resist/max*100)+'%';
-  ui.barSuspend.style.width = Math.min(100, suspend/max*100)+'%';
-  ui.barWeight.style.width = Math.min(100, weight/max*100)+'%';
-  ui.numResist.textContent = resist+'점'; ui.numSuspend.textContent = suspend+'점'; ui.numWeight.textContent = weight+'점';
-  ui.recap.innerHTML = state.history.map((h,i)=>`<div><b>0${i+1}. ${h.scene}</b><br>${h.choice}</div>`).join('');
-  setHidden(ui.game, true); setHidden(ui.end, false);
+  const {resist,suspend,weight}=state.scores;
+  const type=decidePoeticEnding(state.history,state.scores);
+  ui.typeCode.textContent=type.code;
+  ui.typeName.textContent=type.name;
+  ui.typeCaption.textContent=type.caption;
+  ui.typeDesc.textContent=type.desc;
+  ui.typeQuestion.textContent=type.question;
+  const stats=[['Resist',resist,10],['Suspend',suspend,10],['Weight',weight,14]];
+  stats.forEach(([key,score,max])=>{
+    const pct=Math.round(Math.min(100,Math.max(0,score/max*100)));
+    ui['bar'+key].style.width=pct+'%';
+    ui['num'+key].textContent=pct+' / 100';
+  });
+  // All result text is derived from the user's actual four choices, never a personality diagnosis.
+  ui.recap.innerHTML=state.history.map((h,i)=>`<div><b>${String(i+1).padStart(2,'0')} · ${h.scene}</b><br>${h.choice}</div>`).join('');
+  setHidden(ui.game,true);setHidden(ui.end,false);
+  ui.end.scrollTop=0;
 }
 ui.nextBtn.onclick = ()=>{ if(state.index >= scenes.length-1) finishGame(); else { state.index += 1; renderScene(); } };
 function resetGame(){
